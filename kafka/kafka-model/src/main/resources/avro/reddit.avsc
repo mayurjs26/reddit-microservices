@@ -1,0 +1,19 @@
+{
+  "namespace": "com.reddit.microservices.kafka.avro.model",
+  "type": "record",
+  "name" : "RedditAvroModel",
+  "fields": [
+    {
+      "name" : "text",
+      "type": ["null", "string"]
+    },
+    {
+      "name": "title",
+      "type": ["null", "string"]
+    },
+    {
+      "name": "createdAt",
+      "type": ["null", "long"]
+    }
+  ]
+}

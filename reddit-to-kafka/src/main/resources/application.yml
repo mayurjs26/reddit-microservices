@@ -1,0 +1,18 @@
+reddit-to-kafka-service:
+  reddit-topics:
+    - Java
+    - rit
+  welcome-message: Hello World
+
+api:
+  username: just_for_the_api
+  password: Newyork@2021
+  client-id: KsSKPKLCkif8UsltxwRB4A
+  secret: FxbNBVvrLJaIiRGDBB9YK50M0BtDWw
+
+api-url:
+  new-post-url: "https://reddit.com/r/{}/new.json?limit={}"
+  new-comments-url: "https://reddit.com"
+
+server:
+  port: 9099
