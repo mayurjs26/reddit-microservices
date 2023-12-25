@@ -9,3 +9,22 @@ api:
   password: Newyork@2021
   client-id: KsSKPKLCkif8UsltxwRB4A
   secret: FxbNBVvrLJaIiRGDBB9YK50M0BtDWw
+
+retry-config:
+  initial-interval-ms: 1000
+  max-interval-ms: 10000
+  multiplier: 2.0
+  maxAttempts: 3
+  sleep-time-ms: 2000
+
+kafka-config:
+  bootstrap-servers: localhost:19092, localhost:29092, localhost:39092
+  schema-registry-url-key: schema.registry.url
+  schema-registry-url: http://localhost:8081
+  topic-name: reddit-topic
+  topic-names-to-create:
+    - reddit-topic
+  num-of-partitions: 3
+  replication-factor: 3
+
+
