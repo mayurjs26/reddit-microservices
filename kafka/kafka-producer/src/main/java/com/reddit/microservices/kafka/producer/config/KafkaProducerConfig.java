@@ -4,7 +4,6 @@ import com.reddit.microservices.config.KafkaConfigData;
 import com.reddit.microservices.config.KafkaProducerConfigData;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -16,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+
 public class KafkaProducerConfig <K extends Serializable, V extends SpecificRecordBase> {
     private final KafkaConfigData kafkaConfigData;
 
@@ -30,9 +30,15 @@ public class KafkaProducerConfig <K extends Serializable, V extends SpecificReco
     public Map<String, Object> producerConfig() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfigData.getBootstrapServers());
+        System.out.println("------------------------");
+        System.out.println("Batch Size : " + kafkaConfigData.getBootstrapServers());
+        System.out.println("---------------------------");
         props.put(kafkaConfigData.getSchemaRegistryUrlKey(), kafkaConfigData.getSchemaRegistryUrl());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerConfigData.getKeySerializerClass());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProducerConfigData.getValueSerializerClass());
+        System.out.println("------------------------");
+        System.out.println("Batch Size : " + kafkaProducerConfigData.getKeySerializerClass());
+        System.out.println("---------------------------");
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, kafkaProducerConfigData.getBatchSize() *
                 kafkaProducerConfigData.getBatchSizeBoostFactor());
         props.put(ProducerConfig.LINGER_MS_CONFIG, kafkaProducerConfigData.getLingerMs());

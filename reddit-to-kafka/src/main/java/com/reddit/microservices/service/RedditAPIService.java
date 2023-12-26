@@ -29,7 +29,7 @@ public class RedditAPIService {
     private final KafkaConfigData kafkaConfigData;
 
     public RedditAPIService(RedditToAvroTransformer redditToAvroTransformer,
-                            KafkaProducer<String, RedditAvroModel> kafkaProducer, KafkaConfigData kafkaConfigData) {
+            KafkaProducer<String, RedditAvroModel> kafkaProducer, KafkaConfigData kafkaConfigData) {
         this.redditToAvroTransformer = redditToAvroTransformer;
         this.kafkaProducer = kafkaProducer;
         this.kafkaConfigData = kafkaConfigData;
@@ -45,7 +45,7 @@ public class RedditAPIService {
             Response result = httpClient.newCall(request).execute();
             response = mapper.readValue(result.body().byteStream(), RedditApiResponse.class);
 
-        }  catch (DatabindException e) {
+        } catch (DatabindException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -59,28 +59,27 @@ public class RedditAPIService {
         int limit = 100;
         String urlTemplate = "https://reddit.com/r/%s/new.json?limit=%d";
         while (true) {
-          for (String subReddit : subRedditList) {
-            String url = String.format(urlTemplate, subReddit, limit);
-            RedditApiResponse response = getAPIData(url);
-              System.out.println(response);
-//            if (response != null) {
-//                response.getData().getChildren().forEach((redditPost -> {
-//                    RedditApiResponse.PostData data = redditPost.getData();
-//                    RedditPost post = new RedditPost(data.getSelftext(), data.getCreated_utc(), data.getTitle());
-//                    RedditAvroModel redditAvroModel = redditToAvroTransformer.getRedditAvroModelFromJson(post);
-//                    kafkaProducer.send(kafkaConfigData.getTopicName(),subReddit, redditAvroModel);
-//                }));
-//              System.out.println("Submit to kafka");
-//            }
-            try {
-              Thread.sleep(1000);
-            } catch (InterruptedException e) {
-              e.printStackTrace();
+            for (String subReddit : subRedditList) {
+                String url = String.format(urlTemplate, subReddit, limit);
+                RedditApiResponse response = getAPIData(url);
+                System.out.println(response);
+                if (response != null) {
+                    response.getData().getChildren().forEach((redditPost -> {
+                        RedditApiResponse.PostData data = redditPost.getData();
+                        RedditPost post = new RedditPost(data.getSelftext(), data.getCreated_utc(), data.getTitle());
+                        RedditAvroModel redditAvroModel = redditToAvroTransformer.getRedditAvroModelFromJson(post);
+                        kafkaProducer.send(kafkaConfigData.getTopicName(), subReddit, redditAvroModel);
+                    }));
+                    System.out.println("Submit to kafka");
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
-
-          }
         }
-  }
-
+    }
 
 }

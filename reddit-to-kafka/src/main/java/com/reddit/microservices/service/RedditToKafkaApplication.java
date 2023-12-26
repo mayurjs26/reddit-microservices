@@ -2,6 +2,7 @@ package com.reddit.microservices.service;
 
 import com.reddit.microservices.config.RedditAPIConfigData;
 import com.reddit.microservices.config.RedditToKafkaConfigData;
+import com.reddit.microservices.service.init.StreamInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -20,12 +21,14 @@ public class RedditToKafkaApplication implements CommandLineRunner {
   private RedditToKafkaConfigData redditToKafkaConfigData;
   private RedditAPIConfigData redditAPIConfigData;
   private RedditAPIService redditAPIService;
+  private StreamInitializer streamInitializer;
 
   public RedditToKafkaApplication(RedditToKafkaConfigData redditToKafkaConfigData, RedditAPIConfigData redditAPIConfigData,
-                                  RedditAPIService redditAPIService) {
+                                  RedditAPIService redditAPIService, StreamInitializer streamInitializer) {
     this.redditToKafkaConfigData = redditToKafkaConfigData;
     this.redditAPIConfigData = redditAPIConfigData;
     this.redditAPIService = redditAPIService;
+    this.streamInitializer = streamInitializer;
   }
 
   public static void main(String[] args) {
@@ -39,6 +42,7 @@ public class RedditToKafkaApplication implements CommandLineRunner {
     LOG.info("Welcome message " + redditToKafkaConfigData.getWelcomeMessage());
     LOG.info(Arrays.toString(redditToKafkaConfigData.getRedditTopics().toArray(new String[] {})));
     LOG.info("username : " + redditAPIConfigData);
+    streamInitializer.init();
     redditAPIService.submitSubRedditDataToKafka(redditToKafkaConfigData.getRedditTopics());
   }
 

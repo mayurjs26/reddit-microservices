@@ -1,4 +1,4 @@
-package com.redditmicroservices.common.config;
+package com.reddit.microservices.common.config;
 
 import com.reddit.microservices.config.RetryConfigData;
 import org.springframework.context.annotation.Bean;

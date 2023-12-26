@@ -14,21 +14,21 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 @Service
-public class RedditKafkaProducer implements KafkaProducer<Long, RedditAvroModel> {
+public class RedditKafkaProducer implements KafkaProducer<String, RedditAvroModel> {
 
     private static final Logger LOG = LoggerFactory.getLogger(RedditKafkaProducer.class);
 
-    private KafkaTemplate<Long, RedditAvroModel> kafkaTemplate;
+    private KafkaTemplate<String, RedditAvroModel> kafkaTemplate;
 
-    public RedditKafkaProducer(KafkaTemplate<Long, RedditAvroModel> kafkaTemplate) {
+    public RedditKafkaProducer(KafkaTemplate<String, RedditAvroModel> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
 
     @Override
-    public void send(String topicName, Long key, RedditAvroModel message) {
+    public void send(String topicName, String key, RedditAvroModel message) {
         LOG.info("Sending message='{}' to topic='{}'", message, topicName);
-        CompletableFuture<SendResult<Long, RedditAvroModel>> kafkaResultFuture = kafkaTemplate.send(topicName, key, message);
+        CompletableFuture<SendResult<String, RedditAvroModel>> kafkaResultFuture = kafkaTemplate.send(topicName, key, message);
         kafkaResultFuture.whenComplete(getCallback(topicName, message));
 
     }
@@ -40,7 +40,7 @@ public class RedditKafkaProducer implements KafkaProducer<Long, RedditAvroModel>
         }
     }
 
-    private BiConsumer<SendResult<Long, RedditAvroModel>, Throwable> getCallback(String topicName, RedditAvroModel message) {
+    private BiConsumer<SendResult<String, RedditAvroModel>, Throwable> getCallback(String topicName, RedditAvroModel message) {
         return (result, ex) -> {
             if (ex == null) {
                 RecordMetadata metadata = result.getRecordMetadata();
