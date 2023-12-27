@@ -62,7 +62,7 @@ public class RedditAPIService {
             for (String subReddit : subRedditList) {
                 String url = String.format(urlTemplate, subReddit, limit);
                 RedditApiResponse response = getAPIData(url);
-                System.out.println(response);
+//                System.out.println(response);
                 if (response != null) {
                     response.getData().getChildren().forEach((redditPost -> {
                         RedditApiResponse.PostData data = redditPost.getData();
@@ -73,7 +73,7 @@ public class RedditAPIService {
                     System.out.println("Submit to kafka");
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
